@@ -1,0 +1,69 @@
+{
+  "name": "dsh-frameless-page",
+  "version": "0.1.23",
+  "description": "DSH-Portable 的顶部灵动岛胶囊窗口 UI：待机三点、悬浮描边、点击展开、拖动窗口、原生菜单与窗口控制，可切换回原生标题栏。",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "frameless",
+    "dynamic-island"
+  ],
+  "type": "module",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json",
+    "./locale/*": "./locale/*"
+  },
+  "files": [
+    "lib",
+    "locale",
+    "assets",
+    "cordis.patch.yml",
+    "README.md",
+    "README.en.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-layout"
+      ],
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": ">=4.0.1",
+    "react": "^18.2.0"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/cordis": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "scripts": {
+    "build": "node scripts/build-client.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArtificialAngels/dsh-frameless-page.git"
+  },
+  "homepage": "https://github.com/ArtificialAngels/dsh-frameless-page",
+  "bugs": {
+    "url": "https://github.com/ArtificialAngels/dsh-frameless-page/issues"
+  },
+  "author": "ArtificialAngels",
+  "license": "MIT"
+}
