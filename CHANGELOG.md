@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.1.36
+- Full-bleed window: the shell can now use a 0px inset (no black border). The plugin adds transparent edge resize strips (left/right/top/bottom + corners) that send `dsh-portable/window-resize {edge}` so the native window still resizes from all four sides.
 ## 0.1.35
 - Do not auto-hide the capsule on the transient `frameless:false` / `nativeChromeForced` window-state that the 0.9.5 shell posts during startup; it could leave the capsule permanently hidden. The capsule is always shown and the shell owns native-bar visibility.
 ## 0.1.34
@@ -66,5 +68,6 @@
 
 ## 0.1.14
 - Reverted the ellipse, zero side padding, no reserved space, click (on release) expands.
+
 
 

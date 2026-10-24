@@ -1,7 +1,7 @@
 {
   "name": "dsh-frameless-page",
   "displayName": "灵动岛窗口",
-  "version": "0.1.35",
+  "version": "0.1.36",
   "description": "DSH-Portable 的顶部灵动岛胶囊窗口 UI：待机三点、悬停描边、单击展开、拖动窗口、原生菜单与窗口控制，宽度不足时自动折叠菜单。",
   "keywords": [
     "deepseek-harness",
