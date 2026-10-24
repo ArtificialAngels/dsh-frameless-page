@@ -36,7 +36,6 @@
 .dfp-island,.dfp-island *{box-sizing:border-box}
 .dfp-island [hidden]{display:none !important}
 .dfp-island[data-collapsing="1"] .dfp-island__face{display:none}
-.dfp-island[data-native-forced="1"]{display:none}
 .dfp-island[data-hover="0"]:not([data-open="1"]):not([data-menu="1"]):not([data-submenu="1"]){background:transparent !important;border-color:transparent !important;box-shadow:none !important}
 .dfp-island[data-hover="1"]:not([data-open="1"]):not([data-menu="1"]):not([data-submenu="1"]){background:transparent !important;box-shadow:none !important}
 .dfp-island[data-open="1"]{justify-content:flex-start;transition:width 430ms cubic-bezier(.34,1.45,.5,1),background .2s ease,border-color .2s ease,box-shadow .22s ease}
@@ -656,14 +655,10 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       if (!snapshot) return;
       state.maximized = snapshot.maximized === true;
       state.fullscreen = snapshot.fullscreen === true;
-      // Upstream 0.9.5 外壳在渲染失败/导航重启时会强制恢复原生标题栏（nativeChromeForced），
-      // 或明确回报 frameless=false；这两种情况都隐藏胶囊，避免双标题栏。
-      if (snapshot.nativeChromeForced === true || snapshot.frameless === false) {
-        island.setAttribute("data-native-forced", "1");
-        closeSubmenu(); closeMenu(); setExpanded(false);
-      } else {
-        island.removeAttribute("data-native-forced");
-      }
+      // 不再根据 window-state 自动隐藏胶囊：0.9.5 外壳在启动/导航阶段会先发一条
+      // frameless=false 的瞬时状态，按它隐藏会导致胶囊一直不出现。胶囊始终显示，
+      // 由外壳自己决定原生栏是否可见。
+      island.removeAttribute("data-native-forced");
       var label = state.maximized ? (t("islandRestore") || "还原窗口") : (t("islandMaximize") || "最大化或还原");
       maximizeButton.setAttribute("data-maximized", state.maximized ? "1" : "0");
       maximizeButton.setAttribute("aria-label", label);

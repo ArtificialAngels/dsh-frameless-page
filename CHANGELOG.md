@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.1.35
+- Do not auto-hide the capsule on the transient `frameless:false` / `nativeChromeForced` window-state that the 0.9.5 shell posts during startup; it could leave the capsule permanently hidden. The capsule is always shown and the shell owns native-bar visibility.
 ## 0.1.34
 - Refresh the shipped icon to the island pill artwork (0.1.33 packed the old gravity icon).
 ## 0.1.33
@@ -64,4 +66,5 @@
 
 ## 0.1.14
 - Reverted the ellipse, zero side padding, no reserved space, click (on release) expands.
+
 
