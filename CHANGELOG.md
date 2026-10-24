@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.1.34
+- Refresh the shipped icon to the island pill artwork (0.1.33 packed the old gravity icon).
 ## 0.1.33
 - Align the manifest with the DSH bundle spec: `dsh.manifestVersion: 1`, `engines.dsh`, top-level `icon`, `dsh.compatibility.profiles`, exported `./icon` / `./locale/*.json`, `CHANGELOG.md` + `LICENSE` in `files`.
 - Replace the stale gravity-page locale files with the island strings and `meta.title` / `meta.description` used by Plugin Manager.
@@ -62,3 +64,4 @@
 
 ## 0.1.14
 - Reverted the ellipse, zero side padding, no reserved space, click (on release) expands.
+
