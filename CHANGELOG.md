@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.1.26
+- Reverted the color cycling; the three lamps are fixed again, now yellow (#ffd60a) / green (#34c759) / blue (#0a84ff).
 ## 0.1.25
 - The three dots no longer use fixed colors: each lamp cycles red → green → blue every 6s (phase-shifted by 2s), so at any moment the three dots show three different, alternating colors; glow follows the current color.
 ## 0.1.24
@@ -12,5 +14,6 @@
 - Fullscreen keeps the pill visible and clickable to exit.
 - New/old UI switch with persistence; iOS-style traffic lights in the native bar.
 - Removed the legacy "gravity page" floating overlay.
+
 
 

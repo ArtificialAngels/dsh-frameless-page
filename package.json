@@ -1,13 +1,14 @@
 {
   "name": "dsh-frameless-page",
-  "version": "0.1.25",
-  "description": "DSH-Portable 的顶部灵动岛胶囊窗口 UI：待机三点、悬浮描边、点击展开、拖动窗口、原生菜单与窗口控制，可切换回原生标题栏。",
+  "version": "0.1.26",
+  "description": "为 DSH-Portable 窗口加入顶部居中的灵动岛胶囊：拖动/窗口控制/原生菜单，可切换回原生标题栏 UI。",
   "keywords": [
     "dsh",
     "dsh-plugin",
     "deepseek-harness",
     "frameless",
-    "dynamic-island"
+    "floating-window",
+    "gravity"
   ],
   "type": "module",
   "main": "./lib/index.js",
@@ -54,16 +55,9 @@
     "node": "^22.19.0 || >=24.0.0"
   },
   "scripts": {
-    "build": "node scripts/build-client.mjs"
+    "build": "node scripts/build-client.mjs",
+    "test": "node scripts/smoke.mjs"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ArtificialAngels/dsh-frameless-page.git"
-  },
-  "homepage": "https://github.com/ArtificialAngels/dsh-frameless-page",
-  "bugs": {
-    "url": "https://github.com/ArtificialAngels/dsh-frameless-page/issues"
-  },
-  "author": "ArtificialAngels",
+  "author": "DSH-Portable workspace",
   "license": "MIT"
 }

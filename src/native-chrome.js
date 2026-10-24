@@ -45,23 +45,17 @@
   height:100%;padding:0 2px;flex:0 0 auto;z-index:1}
 .dfp-island[data-open="1"] .dfp-island__face{display:none}
 .dfp-island__dot{--dfp-dot:#fff;display:block;width:5px;height:5px;margin:0;padding:0;align-self:center;line-height:0;font-size:0;border-radius:50%;flex:0 0 auto;transform:none;
-  background:currentColor;color:var(--dfp-dot);opacity:.96;animation:dfp-dot-cycle 6s linear infinite;
-  box-shadow:0 0 9px 1px color-mix(in srgb,currentColor 5%,transparent),
-             0 0 3px 0 color-mix(in srgb,currentColor 12%,transparent),
+  background:var(--dfp-dot);opacity:.96;
+  box-shadow:0 0 9px 1px color-mix(in srgb,var(--dfp-dot) 5%,transparent),
+             0 0 3px 0 color-mix(in srgb,var(--dfp-dot) 12%,transparent),
              0 0 0 1px rgba(0,0,0,.16) inset,
              0 1px 1px rgba(255,255,255,.30) inset}
-.dfp-island__dot:nth-child(1){--dfp-dot:#ff5f57;animation-delay:0s}
-.dfp-island__dot:nth-child(2){--dfp-dot:#34c759;animation-delay:-2s}
-.dfp-island__dot:nth-child(3){--dfp-dot:#0a84ff;animation-delay:-4s}
-.dfp-island[data-busy="1"] .dfp-island__dot{animation:dfp-dot-cycle 6s linear infinite,dfp-dot-blink 1.15s ease-in-out infinite}
-.dfp-island[data-busy="1"] .dfp-island__dot:nth-child(1){animation-delay:0s,0s}
-.dfp-island[data-busy="1"] .dfp-island__dot:nth-child(2){animation-delay:-2s,.14s}
-.dfp-island[data-busy="1"] .dfp-island__dot:nth-child(3){animation-delay:-4s,.28s}
-@keyframes dfp-dot-cycle{
-  0%,100%{color:#ff5f57}
-  33.333%{color:#34c759}
-  66.666%{color:#0a84ff}
-}
+.dfp-island__dot:nth-child(1){--dfp-dot:#ffd60a}
+.dfp-island__dot:nth-child(2){--dfp-dot:#34c759}
+.dfp-island__dot:nth-child(3){--dfp-dot:#0a84ff}
+.dfp-island[data-busy="1"] .dfp-island__dot{animation:dfp-dot-blink 1.15s ease-in-out infinite}
+.dfp-island[data-busy="1"] .dfp-island__dot:nth-child(2){animation-delay:.14s}
+.dfp-island[data-busy="1"] .dfp-island__dot:nth-child(3){animation-delay:.28s}
 @keyframes dfp-dot-blink{
   0%,100%{opacity:.34;filter:saturate(.72) brightness(.92)}
   22%{opacity:1;filter:saturate(1.3) brightness(1.06)}
