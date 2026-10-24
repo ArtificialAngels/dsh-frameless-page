@@ -1,6 +1,6 @@
 {
   "name": "dsh-frameless-page",
-  "version": "0.1.24",
+  "version": "0.1.25",
   "description": "DSH-Portable 的顶部灵动岛胶囊窗口 UI：待机三点、悬浮描边、点击展开、拖动窗口、原生菜单与窗口控制，可切换回原生标题栏。",
   "keywords": [
     "dsh",
