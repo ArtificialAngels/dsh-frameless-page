@@ -43,15 +43,6 @@
 .dfp-island__face{position:relative;display:flex;align-items:center;justify-content:center;gap:2px;
   height:100%;padding:0 2px;flex:0 0 auto;z-index:1}
 .dfp-island[data-open="1"] .dfp-island__face{display:none}
-.dfp-resize{position:fixed;z-index:2147482000;background:transparent;touch-action:none}
-.dfp-resize[data-edge="left"]{left:0;top:0;bottom:0;width:4px;cursor:ew-resize}
-.dfp-resize[data-edge="right"]{right:0;top:0;bottom:0;width:4px;cursor:ew-resize}
-.dfp-resize[data-edge="top"]{left:0;right:0;top:0;height:3px;cursor:ns-resize}
-.dfp-resize[data-edge="bottom"]{left:0;right:0;bottom:0;height:4px;cursor:ns-resize}
-.dfp-resize[data-edge="top-left"]{left:0;top:0;width:9px;height:9px;cursor:nwse-resize}
-.dfp-resize[data-edge="top-right"]{right:0;top:0;width:9px;height:9px;cursor:nesw-resize}
-.dfp-resize[data-edge="bottom-left"]{left:0;bottom:0;width:9px;height:9px;cursor:nesw-resize}
-.dfp-resize[data-edge="bottom-right"]{right:0;bottom:0;width:9px;height:9px;cursor:nwse-resize}
 .dfp-island__dot{--dfp-dot:#fff;display:block;width:5px;height:5px;margin:0;padding:0;align-self:center;line-height:0;font-size:0;border-radius:50%;flex:0 0 auto;transform:none;
   background:var(--dfp-dot);opacity:.96;
   box-shadow:0 0 9px 1px color-mix(in srgb,var(--dfp-dot) 5%,transparent),
@@ -228,7 +219,6 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       "</div>" +
       '<div class="dfp-island__submenu" role="menu"></div>';
     document.body.appendChild(island);
-    var resizeEdges = createResizeEdges();
 
     var face = island.querySelector(".dfp-island__face");
     var row = island.querySelector(".dfp-island__row");
@@ -676,7 +666,6 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       var menuMax = island.querySelector('[data-menu-action="maximize"]');
       if (menuMax) menuMax.textContent = label;
       island.setAttribute("data-fullscreen", state.fullscreen ? "1" : "0");
-      setResizeEdgesVisible(!state.fullscreen);
       try {
         document.documentElement.classList.toggle("dfp-window-maximized", state.maximized);
         document.documentElement.classList.toggle("dfp-window-fullscreen", state.fullscreen);
@@ -711,35 +700,45 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
     }
     try { host.addEventListener("message", onMessage); } catch (error) { /* no channel */ }
 
-    function createResizeEdges() {
-      var edges = ["top", "top-left", "top-right", "left", "right", "bottom", "bottom-left", "bottom-right"];
-      var nodes = [];
-      edges.forEach(function (edge) {
-        var strip = document.createElement("div");
-        strip.className = "dfp-resize";
-        strip.setAttribute("data-edge", edge);
-        strip.setAttribute("data-no-window-drag", "");
-        strip.addEventListener("pointerdown", function (event) {
-          if (event.button !== 0) return;
-          event.preventDefault();
-          event.stopPropagation();
-          if (event.cancelable) event.preventDefault();
-          closeMenu();
-          closeSubmenu();
-          post({ type: "dsh-portable/window-resize", edge: edge });
-        }, true);
-        document.body.appendChild(strip);
-        nodes.push(strip);
-      });
-      return nodes;
+    function edgeForPoint(x, y) {
+      var w = window.innerWidth, h = window.innerHeight;
+      var corner = 9, side = 4, topEdge = 3;
+      var nearLeft = x <= corner, nearRight = x >= w - corner;
+      var nearTop = y <= corner, nearBottom = y >= h - corner;
+      if (nearTop && nearLeft) return "top-left";
+      if (nearTop && nearRight) return "top-right";
+      if (nearBottom && nearLeft) return "bottom-left";
+      if (nearBottom && nearRight) return "bottom-right";
+      if (y <= topEdge) return "top";
+      if (y >= h - side) return "bottom";
+      if (x <= side) return "left";
+      if (x >= w - side) return "right";
+      return null;
     }
 
-    function setResizeEdgesVisible(visible) {
-      Array.prototype.forEach.call(resizeEdges || [], function (strip) {
-        strip.style.display = visible ? "" : "none";
-      });
+    function onEdgePointerDown(event) {
+      if (event.button !== 0 || state.fullscreen) return;
+      if (island.contains(event.target)) return;
+      var edge = edgeForPoint(event.clientX, event.clientY);
+      if (!edge) return;
+      if (event.cancelable) event.preventDefault();
+      event.stopImmediatePropagation();
+      closeMenu();
+      closeSubmenu();
+      post({ type: "dsh-portable/window-resize", edge: edge });
     }
 
+    function onEdgeCursorMove(event) {
+      if (state.fullscreen || island.contains(event.target)) {
+        document.documentElement.style.cursor = "";
+        return;
+      }
+      var edge = edgeForPoint(event.clientX, event.clientY);
+      document.documentElement.style.cursor = !edge ? ""
+        : edge === "left" || edge === "right" ? "ew-resize"
+        : edge === "top" || edge === "bottom" ? "ns-resize"
+        : edge === "top-left" || edge === "bottom-right" ? "nwse-resize" : "nesw-resize";
+    }
     function startDrag() {
       closeSubmenu();
       setExpanded(false);
@@ -894,6 +893,8 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       }
     }
     function onPageDragUp() { pageDragPress = null; }
+    document.addEventListener("pointerdown", onEdgePointerDown, true);
+    document.addEventListener("pointermove", onEdgeCursorMove, true);
     document.addEventListener("pointerdown", onPageDragDown, true);
     document.addEventListener("pointermove", onPageDragMove, true);
     document.addEventListener("pointerup", onPageDragUp, true);
@@ -1014,11 +1015,12 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
         document.removeEventListener("pointermove", onPageDragMove, true);
         document.removeEventListener("pointerup", onPageDragUp, true);
         document.removeEventListener("pointercancel", onPageDragUp, true);
+        document.removeEventListener("pointerdown", onEdgePointerDown, true);
+        document.removeEventListener("pointermove", onEdgeCursorMove, true);
+        document.documentElement.style.cursor = "";
         document.removeEventListener("dblclick", onPageDoubleClick, true);
         document.removeEventListener("keydown", onDocumentKeyDown, true);
         window.removeEventListener("resize", onResize);
-        Array.prototype.forEach.call(resizeEdges || [], function (strip) { strip.remove(); });
-        resizeEdges = [];
         island.remove();
       },
     };

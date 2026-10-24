@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.1.37
+- Remove the transparent overlay strips used for window resizing (they could intermittently render as an opaque 3px band over the wallpaper). Edge/corner resizing is now hit-tested from document pointer coordinates, with cursor hints set via JS; nothing is drawn over the page.
 ## 0.1.36
 - Full-bleed window: the shell can now use a 0px inset (no black border). The plugin adds transparent edge resize strips (left/right/top/bottom + corners) that send `dsh-portable/window-resize {edge}` so the native window still resizes from all four sides.
 ## 0.1.35
@@ -68,6 +70,7 @@
 
 ## 0.1.14
 - Reverted the ellipse, zero side padding, no reserved space, click (on release) expands.
+
 
 
 
