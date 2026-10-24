@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.1.30
+- Drop the optional patched shell bundle. The plugin targets the new UI only and runs on the stock DSH-Portable 0.9.5+ shell (which already provides the window-chrome bridge); no upstream exe is modified.
 ## 0.1.29
 - Handle upstream 0.9.5 window-state: hide the capsule when the shell reports `nativeChromeForced` or `frameless:false` (native title bar restored), so there is never a double title bar.
 - Bundle the optional patched 0.9.5 shell (`native/`) with the rejected cosmetic tweaks: 6px resize grip, no DWM white hairline, iOS traffic lights. Capsule works on the stock shell already.
@@ -21,6 +23,7 @@
 - Fullscreen keeps the pill visible and clickable to exit.
 - New/old UI switch with persistence; iOS-style traffic lights in the native bar.
 - Removed the legacy "gravity page" floating overlay.
+
 
 
 
