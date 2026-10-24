@@ -1,39 +1,64 @@
 # Changelog
 
+## 0.1.33
+- Align the manifest with the DSH bundle spec: `dsh.manifestVersion: 1`, `engines.dsh`, top-level `icon`, `dsh.compatibility.profiles`, exported `./icon` / `./locale/*.json`, `CHANGELOG.md` + `LICENSE` in `files`.
+- Replace the stale gravity-page locale files with the island strings and `meta.title` / `meta.description` used by Plugin Manager.
+- Enable `dsh.client.immediately` so the overlay loads at boot; drop the unused `ui-layout` client injection.
+- Remove the broken `test` script (no smoke suite ships) and refresh keywords/description.
+
 ## 0.1.32
-- Fix the collapse order and widths: the capsule now only falls back to the ••• compact tier when even the three top-level menus do not fit (previously it jumped to ••• too early). Groups fold right-to-left (Help -> View -> File) as space shrinks.
-- The expanded capsule width is always the measured content width (removed the 150px floor that left a large blank area to the right in compact mode).
+- Fix collapse order/width: fall back to the ••• tier only when the three top-level menus do not fit; fold Help -> View -> File as width shrinks. Expanded width equals measured content (150px floor removed).
+
 ## 0.1.31
-- Flatten the menu: with enough width the expanded row shows every File/View/Help command inline; when space is tight the groups fold back into their top-level buttons one by one (Help -> View -> File), then the existing ••• / compact tiers apply.
+- Flatten menu commands into the row when width allows; fold groups back one by one when space is tight.
+
 ## 0.1.30
-- Drop the optional patched shell bundle. The plugin targets the new UI only and runs on the stock DSH-Portable 0.9.5+ shell (which already provides the window-chrome bridge); no upstream exe is modified.
+- New-UI only: removed the patched-shell bundle; runs on the stock DSH-Portable 0.9.5+ window-chrome bridge.
+
 ## 0.1.29
-- Handle upstream 0.9.5 window-state: hide the capsule when the shell reports `nativeChromeForced` or `frameless:false` (native title bar restored), so there is never a double title bar.
-- Bundle the optional patched 0.9.5 shell (`native/`) with the rejected cosmetic tweaks: 6px resize grip, no DWM white hairline, iOS traffic lights. Capsule works on the stock shell already.
+- Hide the capsule when the shell reports `nativeChromeForced` / `frameless:false`.
+
 ## 0.1.28
-- Removed the "switch to old UI" button and all plugin-side old-UI/uiMode handling; the plugin now always renders the island only (upstream rejected the shell-side PR, so it ships standalone).
+- Removed the old-UI switch and all `uiMode` handling from the plugin.
+
 ## 0.1.27
-- Dot colors changed to fixed red (#ff5f57) / yellow (#ffd60a) / blue (#0a84ff).
+- Fixed dot palette: red / yellow / blue.
+
 ## 0.1.26
-- Reverted the color cycling; the three lamps are fixed again, now yellow (#ffd60a) / green (#34c759) / blue (#0a84ff).
+- Reverted color cycling; fixed yellow / green / blue dots.
+
 ## 0.1.25
-- The three dots no longer use fixed colors: each lamp cycles red → green → blue every 6s (phase-shifted by 2s), so at any moment the three dots show three different, alternating colors; glow follows the current color.
+- Dots cycle red -> green -> blue (reverted in 0.1.26).
+
 ## 0.1.24
-- Keep the three pill dots exactly aligned: removed the staggered `scale()` from the busy blink animation (now opacity/saturation only) and hard-blockified the dots (`display:block; margin:0; align-self:center`) so fractional DPI/zoom cannot shift their tops.
+- Keep the three dots on one line (no scale in the busy blink; block-level, centered dots).
+
 ## 0.1.23
-- Initial standalone release of the island pill UI.
-- Idle: three dots only; hover: outline only; click to expand; 1.2s leave collapse.
-- Expanded row: File / Switch to old UI / View / Help / Minimize / Maximize / Close.
-- Drag anywhere non-button (>3px), top-5% drag zone, double-click maximize/restore.
-- Fullscreen keeps the pill visible and clickable to exit.
-- New/old UI switch with persistence; iOS-style traffic lights in the native bar.
-- Removed the legacy "gravity page" floating overlay.
+- Top 5% double-click maximizes/restores.
 
+## 0.1.22
+- Top drag zone narrowed from 10% to 5%.
 
+## 0.1.21
+- Top 10% non-control area drags the window.
 
+## 0.1.20
+- Centered the dots inside the border; capsule +1 dot diameter long.
 
+## 0.1.19
+- Collapse dots only after the shrink animation; collapsed length 1.5x dots, thinner capsule, moved up one dot diameter.
 
+## 0.1.18
+- Hover shows only the outline; expansion requires a click; drag starts after >3px.
 
+## 0.1.17
+- Fullscreen keeps the pill visible (click to exit); pointer-capture drag.
 
+## 0.1.16
+- Removed the legacy gravity page (Ctrl+Alt+G, sidebar entry, overlay, core.js).
 
+## 0.1.15
+- Collapsed pill becomes a perfect circle (zero straight edge).
 
+## 0.1.14
+- Reverted the ellipse, zero side padding, no reserved space, click (on release) expands.

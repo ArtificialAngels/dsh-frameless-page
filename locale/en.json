@@ -1,24 +1,14 @@
 {
-  "open": "Gravity Page",
-  "openHint": "Gravity Page (Ctrl+Alt+G)",
-  "nav": "Gravity",
-  "title": "Frameless Page",
-  "subtitle": "Frameless · draggable",
-  "grab": "Grab area 50%",
-  "grabAria": "Drag the page (arrow keys nudge, Home resets)",
-  "grabTitle": "Hold to drag the page; hovering here triggers gravity",
-  "close": "Close page",
-  "reset": "Reset position",
-  "field": "Gravity field",
-  "hint": "Move the pointer into the middle 50% grab area of the title bar — the page leans toward the cursor. Hold the grab area to drag the whole page.",
-  "statusIdle": "Idle",
-  "statusActive": "Gravity",
-  "strength": "Pull strength",
-  "density": "Particles",
-  "densityLow": "Low",
-  "densityMid": "Mid",
-  "densityHigh": "High",
-  "particles": "particles",
-  "offset": "Offset",
-  "tilt": "Tilt"
+  "meta": {
+    "title": "Dynamic Island Window",
+    "description": "A top-center Dynamic Island pill for DSH-Portable: drag the window, open native File/View/Help menus and window controls, and fold menus automatically when space runs out."
+  },
+  "islandFile": "File",
+  "islandView": "View",
+  "islandHelp": "Help",
+  "islandMore": "More",
+  "islandMinimize": "Minimize",
+  "islandMaximize": "Maximize or restore",
+  "islandRestore": "Restore window",
+  "islandClose": "Close window"
 }

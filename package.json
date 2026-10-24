@@ -1,23 +1,32 @@
 {
   "name": "dsh-frameless-page",
-  "version": "0.1.32",
-  "description": "为 DSH-Portable 窗口加入顶部居中的灵动岛胶囊：拖动/窗口控制/原生菜单，可切换回原生标题栏 UI。",
+  "displayName": "灵动岛窗口",
+  "version": "0.1.33",
+  "description": "DSH-Portable 的顶部灵动岛胶囊窗口 UI：待机三点、悬停描边、单击展开、拖动窗口、原生菜单与窗口控制，宽度不足时自动折叠菜单。",
   "keywords": [
+    "deepseek-harness",
+    "deepseek-harness-plugin",
     "dsh",
     "dsh-plugin",
-    "deepseek-harness",
-    "frameless",
-    "floating-window",
-    "gravity"
+    "cordis-plugin",
+    "dynamic-island",
+    "window-chrome"
   ],
+  "license": "MIT",
+  "author": "ArtificialAngels",
   "type": "module",
+  "engines": {
+    "node": ">=22.17.0",
+    "dsh": "0.2.1-rc.2"
+  },
   "main": "./lib/index.js",
   "exports": {
     ".": "./lib/index.js",
     "./client": "./lib/client.js",
     "./cordis.patch.yml": "./cordis.patch.yml",
-    "./package.json": "./package.json",
-    "./locale/*": "./locale/*"
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./assets/icon.svg",
+    "./package.json": "./package.json"
   },
   "files": [
     "lib",
@@ -25,39 +34,39 @@
     "assets",
     "cordis.patch.yml",
     "README.md",
-    "README.en.md"
+    "README.en.md",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
+  "icon": "./assets/icon.svg",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArtificialAngels/dsh-frameless-page.git"
+  },
+  "homepage": "https://github.com/ArtificialAngels/dsh-frameless-page#readme",
+  "bugs": {
+    "url": "https://github.com/ArtificialAngels/dsh-frameless-page/issues"
+  },
   "dsh": {
+    "manifestVersion": 1,
     "bundle": {
       "patch": "./cordis.patch.yml"
     },
     "client": {
+      "platform": "web",
+      "immediately": true,
       "inject": [
-        "@deepseek-ai/dsh-client-locale",
-        "@deepseek-ai/dsh-client-ui-layout"
-      ],
-      "platform": "web"
-    }
-  },
-  "peerDependencies": {
-    "@deepseek-ai/cordis": ">=4.0.1",
-    "react": "^18.2.0"
-  },
-  "peerDependenciesMeta": {
-    "@deepseek-ai/cordis": {
-      "optional": true
+        "@deepseek-ai/dsh-client-locale"
+      ]
     },
-    "react": {
-      "optional": true
+    "compatibility": {
+      "profiles": [
+        "web"
+      ]
     }
-  },
-  "engines": {
-    "node": "^22.19.0 || >=24.0.0"
   },
   "scripts": {
     "build": "node scripts/build-client.mjs",
-    "test": "node scripts/smoke.mjs"
-  },
-  "author": "DSH-Portable workspace",
-  "license": "MIT"
+    "pack": "node scripts/build-client.mjs && pnpm pack --pack-destination .artifacts"
+  }
 }
