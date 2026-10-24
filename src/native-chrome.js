@@ -50,8 +50,8 @@
              0 0 3px 0 color-mix(in srgb,var(--dfp-dot) 12%,transparent),
              0 0 0 1px rgba(0,0,0,.16) inset,
              0 1px 1px rgba(255,255,255,.30) inset}
-.dfp-island__dot:nth-child(1){--dfp-dot:#ffd60a}
-.dfp-island__dot:nth-child(2){--dfp-dot:#34c759}
+.dfp-island__dot:nth-child(1){--dfp-dot:#ff5f57}
+.dfp-island__dot:nth-child(2){--dfp-dot:#ffd60a}
 .dfp-island__dot:nth-child(3){--dfp-dot:#0a84ff}
 .dfp-island[data-busy="1"] .dfp-island__dot{animation:dfp-dot-blink 1.15s ease-in-out infinite}
 .dfp-island[data-busy="1"] .dfp-island__dot:nth-child(2){animation-delay:.14s}
