@@ -328,6 +328,7 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       var available = Math.max(140, window.innerWidth - 24);
       var collapsed = { file: false, view: false, help: false };
       applyFlatLayout(collapsed);
+      applyVisibilityForMode("full");
       var width = naturalRowWidth();
       // 先折叠最右边的「帮助」，再「视图」，最后「文件」：空间不足时逐个
       // 收回成一级菜单按钮，顺序正好回到 文件/视图/帮助。
@@ -335,6 +336,7 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       for (var i = 0; i < order.length && width > available; i += 1) {
         collapsed[order[i]] = true;
         applyFlatLayout(collapsed);
+        applyVisibilityForMode("full");
         width = naturalRowWidth();
       }
       return width;
@@ -364,7 +366,7 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       var chromeHeight = Math.round(parseFloat(getComputedStyle(island).height) || 22);
       var dotsLength = Math.max(1, Math.round(faceWidth) - 4);
       collapsedWidth = Math.max(Math.round(dotsLength * 1.5) + 5, chromeHeight);
-      expandedWidth = Math.max(150, Math.round(rowWidth) + 1);
+      expandedWidth = Math.max(60, Math.round(rowWidth) + 1);
       measuring = false;
       island.style.width = (expanded ? expandedWidth : collapsedWidth) + "px";
       positionIsland();
@@ -454,20 +456,9 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       if (visible) element.removeAttribute("hidden"); else element.setAttribute("hidden", "");
     }
 
-    function measure() {
-      if (mode === "full" && row.scrollWidth > 0) widthFull = row.scrollWidth + 12;
-      var available = Math.max(80, window.innerWidth - 24);
-      var full = widthFull;
-      var compact = widthCompact;
-      var tight = widthTight;
-      var next = available >= full + 8 ? "full" : available >= compact + 8 ? "compact" : available >= tight + 8 ? "tight" : "none";
-      if (next !== mode) {
-        mode = next;
-        island.setAttribute("data-mode", mode);
-        setTimeout(measureWidths, 0);
-      }
-      var compactish = mode === "compact" || mode === "tight" || mode === "none";
-      var tightMode = mode === "tight" || mode === "none";
+    function applyVisibilityForMode(nextMode) {
+      var compactish = nextMode === "compact" || nextMode === "tight" || nextMode === "none";
+      var tightMode = nextMode === "tight" || nextMode === "none";
       if (compactish) {
         show(flatHost, false);
         show(fileButton, false);
@@ -486,6 +477,30 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       show(closeButton, !tightMode);
       show(foldedSep, tightMode);
       Array.prototype.forEach.call(foldedActions, function (button) { show(button, tightMode); });
+    }
+
+    function measure() {
+      var available = Math.max(80, window.innerWidth - 24);
+      // 以“当前 layout 实际需要的宽度”判定模式：先平铺/折叠菜单，只有连三个
+      // 一级菜单按钮都放不下时才退到 ••• 紧凑模式，避免过早折叠。
+      applyVisibilityForMode("full");
+      var fullWidthNow = naturalRowWidth();
+      applyVisibilityForMode("compact");
+      var compactWidthNow = naturalRowWidth();
+      applyVisibilityForMode("tight");
+      var tightWidthNow = naturalRowWidth();
+      var next = available >= fullWidthNow + 8 ? "full"
+        : available >= compactWidthNow + 8 ? "compact"
+        : available >= tightWidthNow + 8 ? "tight" : "none";
+      mode = next;
+      island.setAttribute("data-mode", mode);
+      applyVisibilityForMode(mode);
+      widthFull = fullWidthNow;
+      widthCompact = compactWidthNow;
+      widthTight = tightWidthNow;
+      // 胶囊宽度始终等于当前内容宽度（不多留空白）。
+      expandedWidth = Math.max(140, Math.round(naturalRowWidth()) + 1);
+      if (expanded) island.style.width = expandedWidth + "px";
       if (mode === "none" || mode === "tight") {
         if (expanded && !menuOpen) setExpanded(false);
       }

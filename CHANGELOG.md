@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.32
+- Fix the collapse order and widths: the capsule now only falls back to the ••• compact tier when even the three top-level menus do not fit (previously it jumped to ••• too early). Groups fold right-to-left (Help -> View -> File) as space shrinks.
+- The expanded capsule width is always the measured content width (removed the 150px floor that left a large blank area to the right in compact mode).
 ## 0.1.31
 - Flatten the menu: with enough width the expanded row shows every File/View/Help command inline; when space is tight the groups fold back into their top-level buttons one by one (Help -> View -> File), then the existing ••• / compact tiers apply.
 ## 0.1.30
@@ -25,6 +28,7 @@
 - Fullscreen keeps the pill visible and clickable to exit.
 - New/old UI switch with persistence; iOS-style traffic lights in the native bar.
 - Removed the legacy "gravity page" floating overlay.
+
 
 
 
