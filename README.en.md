@@ -13,7 +13,7 @@ shell's native implementation.
 - Hover: outline only, no expansion.
 - Click (press → release, <3px): expand; click background again to collapse.
 - Drag: hold anywhere that is not a button and move >3px to drag the window.
-- Expanded row: File / Switch to old UI / View / Help / Minimize / Maximize / Close
+- Expanded row: File / View / Help / Minimize / Maximize / Close
   (menu commands are executed by the shell).
 - Fullscreen: pill stays visible; click it or press Esc to leave fullscreen.
 - Top 5% of the page: press-drag to move the window, double-click to maximize/restore.

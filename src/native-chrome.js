@@ -35,7 +35,6 @@
   transition:width 300ms cubic-bezier(.4,0,.2,1),background .2s ease,border-color .2s ease,box-shadow .22s ease}
 .dfp-island,.dfp-island *{box-sizing:border-box}
 .dfp-island [hidden]{display:none !important}
-.dfp-island[data-ui-mode="native"]{display:none}
 .dfp-island[data-collapsing="1"] .dfp-island__face{display:none}
 .dfp-island[data-hover="0"]:not([data-open="1"]):not([data-menu="1"]):not([data-submenu="1"]){background:transparent !important;border-color:transparent !important;box-shadow:none !important}
 .dfp-island[data-hover="1"]:not([data-open="1"]):not([data-menu="1"]):not([data-submenu="1"]){background:transparent !important;box-shadow:none !important}
@@ -198,7 +197,6 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       '<div class="dfp-island__row">' +
       '  <button class="dfp-island__btn dfp-island__btn--more" type="button" data-action="overflow" aria-label="更多">•••</button>' +
       '  <button class="dfp-island__btn" type="button" data-action="file" aria-label="文件">文件</button>' +
-      '  <button class="dfp-island__btn" type="button" data-action="toggle-ui" aria-label="切换至老UI">切换至老UI</button>' +
       '  <button class="dfp-island__btn" type="button" data-action="view" aria-label="视图">视图</button>' +
       '  <button class="dfp-island__btn" type="button" data-action="help" aria-label="帮助">帮助</button>' +
       '  <span class="dfp-island__sep" data-part="sep"></span>' +
@@ -229,7 +227,6 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
     var submenuKind = null;
     var chinese = /^zh/i.test(document.documentElement.lang || navigator.language || "zh");
     var fileButton = island.querySelector('.dfp-island__btn[data-action="file"]');
-    var toggleButton = island.querySelector('.dfp-island__btn[data-action="toggle-ui"]');
     var viewButton = island.querySelector('.dfp-island__btn[data-action="view"]');
     var helpButton = island.querySelector('.dfp-island__btn[data-action="help"]');
     var sep = island.querySelector('[data-part="sep"]');
@@ -239,7 +236,7 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
     var mode = "full";
     var expanded = false;
     var menuOpen = false;
-    var state = { maximized: false, fullscreen: false, busy: false, uiMode: "pill" };
+    var state = { maximized: false, fullscreen: false, busy: false };
     var hoverTimer = 0, collapseTimer = 0, holdTimer = 0, menuLeaveTimer = 0, busyTimer = 0, dragFlagTimer = 0;
     var pressStart = null;
     var dragging = false;
@@ -522,7 +519,6 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       };
       measureWidths();
       fileButton.textContent = labels.file;
-      if (toggleButton) toggleButton.textContent = state.uiMode === "native" ? (t("islandToggleNew") || "切换至新UI") : (t("islandToggleOld") || "切换至老UI");
       viewButton.textContent = labels.view;
       helpButton.textContent = labels.help;
       moreButton.setAttribute("aria-label", labels.overflow);
@@ -538,10 +534,6 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       if (!snapshot) return;
       state.maximized = snapshot.maximized === true;
       state.fullscreen = snapshot.fullscreen === true;
-      if (snapshot.uiMode === "native" || snapshot.uiMode === "pill") state.uiMode = snapshot.uiMode;
-      island.setAttribute("data-ui-mode", state.uiMode);
-      if (toggleButton) toggleButton.textContent = state.uiMode === "native" ? (t("islandToggleNew") || "切换至新UI") : (t("islandToggleOld") || "切换至老UI");
-      if (state.uiMode === "native") { closeSubmenu(); closeMenu(); setExpanded(false); }
       var label = state.maximized ? (t("islandRestore") || "还原窗口") : (t("islandMaximize") || "最大化或还原");
       maximizeButton.setAttribute("data-maximized", state.maximized ? "1" : "0");
       maximizeButton.setAttribute("aria-label", label);
@@ -643,13 +635,6 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
         if (menuOpen) closeMenu(); else openMenu();
         return;
       }
-      if (action === "toggle-ui") {
-        closeSubmenu();
-        closeMenu();
-        setExpanded(false);
-        post({ type: "dsh-portable/ui-mode", mode: "native" });
-        return;
-      }
       if (action === "file" || action === "view" || action === "help") {
         openSubmenu(action, button);
         return;
@@ -729,7 +714,7 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
         '[role="combobox"],[data-no-window-drag]');
     }
     function onPageDragDown(event) {
-      if (state.uiMode !== "pill" || event.button !== 0) return;
+      if (event.button !== 0) return;
       if (event.clientY > window.innerHeight * 0.05) return;
       if (island.contains(event.target)) return;
       if (pageDragExempt(event.target)) return;
@@ -749,7 +734,6 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
     document.addEventListener("pointerup", onPageDragUp, true);
     document.addEventListener("pointercancel", onPageDragUp, true);
     function onPageDoubleClick(event) {
-      if (state.uiMode !== "pill") return;
       if (event.clientY > window.innerHeight * 0.05) return;
       if (island.contains(event.target)) return;
       if (event.cancelable) event.preventDefault();

@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.1.28
+- Removed the "switch to old UI" button and all plugin-side old-UI/uiMode handling; the plugin now always renders the island only (upstream rejected the shell-side PR, so it ships standalone).
 ## 0.1.27
 - Dot colors changed to fixed red (#ff5f57) / yellow (#ffd60a) / blue (#0a84ff).
 ## 0.1.26
@@ -16,6 +18,7 @@
 - Fullscreen keeps the pill visible and clickable to exit.
 - New/old UI switch with persistence; iOS-style traffic lights in the native bar.
 - Removed the legacy "gravity page" floating overlay.
+
 
 
 
