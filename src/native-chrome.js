@@ -61,6 +61,9 @@
   22%{opacity:1;filter:saturate(1.3) brightness(1.06)}
   55%{opacity:.86;filter:saturate(1) brightness(1)}
 }
+.dfp-island__flat{display:flex;align-items:center;gap:1px;height:100%;flex:0 0 auto}
+.dfp-island__flat:empty{display:none}
+.dfp-island__flat .dfp-island__btn{font-size:9px;padding:0 5px;min-width:0}
 .dfp-island__row{position:relative;display:flex;align-items:center;gap:1px;flex:0 0 auto;height:100%;
   padding:0 8px;max-width:none;overflow:hidden;opacity:0;z-index:1;pointer-events:none;
   transform:translateX(7px) scaleX(.985);transform-origin:center;
@@ -197,6 +200,7 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       "</div>" +
       '<div class="dfp-island__row">' +
       '  <button class="dfp-island__btn dfp-island__btn--more" type="button" data-action="overflow" aria-label="更多">•••</button>' +
+      '<span class="dfp-island__flat" data-part="flat"></span>' +
       '  <button class="dfp-island__btn" type="button" data-action="file" aria-label="文件">文件</button>' +
       '  <button class="dfp-island__btn" type="button" data-action="view" aria-label="视图">视图</button>' +
       '  <button class="dfp-island__btn" type="button" data-action="help" aria-label="帮助">帮助</button>' +
@@ -244,6 +248,97 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
     var collapsedWidth = 60, expandedWidth = 220, measuring = false, collapseDotsTimer = 0;
     var themeObserver = null, themeResampleTimer = 0;
     var widthFull = 205, widthCompact = 132, widthTight = 52;
+    var flatHost = island.querySelector('[data-part="flat"]');
+    var layoutCollapsed = { file: false, view: false, help: false };
+    buildFlatButtons();
+
+    function flatItemLabel(item) { return chinese ? item.zh : item.en; }
+
+    function buildFlatButtons() {
+      if (!flatHost) return;
+      flatHost.textContent = "";
+      ["file", "view", "help"].forEach(function (group) {
+        var entries = MENUS[group] || [];
+        for (var i = 0; i < entries.length; i += 1) {
+          var entry = entries[i];
+          if (entry.sep) continue;
+          var button = document.createElement("button");
+          button.type = "button";
+          button.className = "dfp-island__btn";
+          button.setAttribute("data-command-id", entry.id);
+          button.setAttribute("data-group", group);
+          button.textContent = flatItemLabel(entry);
+          button.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var commandId = this.getAttribute("data-command-id");
+            closeSubmenu();
+            closeMenu();
+            setExpanded(false);
+            if (commandId) post({ type: "dsh-portable/window-command", id: commandId });
+          });
+          flatHost.appendChild(button);
+        }
+      });
+    }
+
+    function updateFlatLabels() {
+      if (!flatHost) return;
+      Array.prototype.forEach.call(flatHost.querySelectorAll("[data-command-id]"), function (button) {
+        var id = button.getAttribute("data-command-id");
+        var groups = ["file", "view", "help"];
+        for (var g = 0; g < groups.length; g += 1) {
+          var entries = MENUS[groups[g]] || [];
+          for (var i = 0; i < entries.length; i += 1) {
+            if (!entries[i].sep && entries[i].id === id) {
+              button.textContent = flatItemLabel(entries[i]);
+              return;
+            }
+          }
+        }
+      });
+    }
+
+    function allLayoutCollapsed(collapsed) {
+      return collapsed.file && collapsed.view && collapsed.help;
+    }
+
+    function applyFlatLayout(collapsed) {
+      layoutCollapsed = { file: !!collapsed.file, view: !!collapsed.view, help: !!collapsed.help };
+      island.setAttribute("data-layout", allLayoutCollapsed(layoutCollapsed) ? "grouped" : "flat");
+      if (!flatHost) return;
+      var grouped = allLayoutCollapsed(layoutCollapsed);
+      show(flatHost, !grouped);
+      Array.prototype.forEach.call(flatHost.querySelectorAll("[data-group]"), function (button) {
+        show(button, !layoutCollapsed[button.getAttribute("data-group")]);
+      });
+    }
+
+    function naturalRowWidth() {
+      var previous = island.style.width;
+      island.style.width = "auto";
+      island.setAttribute("data-measure", "row");
+      var width = island.getBoundingClientRect().width;
+      island.removeAttribute("data-measure");
+      island.style.width = previous;
+      return width;
+    }
+
+    function chooseFlatLayout() {
+      var available = Math.max(140, window.innerWidth - 24);
+      var collapsed = { file: false, view: false, help: false };
+      applyFlatLayout(collapsed);
+      var width = naturalRowWidth();
+      // 先折叠最右边的「帮助」，再「视图」，最后「文件」：空间不足时逐个
+      // 收回成一级菜单按钮，顺序正好回到 文件/视图/帮助。
+      var order = ["help", "view", "file"];
+      for (var i = 0; i < order.length && width > available; i += 1) {
+        collapsed[order[i]] = true;
+        applyFlatLayout(collapsed);
+        width = naturalRowWidth();
+      }
+      return width;
+    }
 
     function post(message) {
       try { host.postMessage(message); return true; } catch (error) { return false; }
@@ -288,6 +383,7 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       if (expanded) {
         clearTimeout(collapseDotsTimer);
         island.removeAttribute("data-collapsing");
+        chooseFlatLayout();
         measure(); measureWidths(); island.style.width = expandedWidth + "px";
       } else {
         island.style.width = collapsedWidth + "px";
@@ -372,9 +468,17 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
       }
       var compactish = mode === "compact" || mode === "tight" || mode === "none";
       var tightMode = mode === "tight" || mode === "none";
-      show(fileButton, !compactish);
-      show(viewButton, !compactish);
-      show(helpButton, !compactish);
+      if (compactish) {
+        show(flatHost, false);
+        show(fileButton, false);
+        show(viewButton, false);
+        show(helpButton, false);
+      } else {
+        show(flatHost, !allLayoutCollapsed(layoutCollapsed));
+        show(fileButton, layoutCollapsed.file);
+        show(viewButton, layoutCollapsed.view);
+        show(helpButton, layoutCollapsed.help);
+      }
       show(sep, !compactish);
       show(moreButton, compactish);
       show(minimizeButton, !tightMode);
@@ -518,6 +622,8 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
         close: t("islandClose") || "关闭窗口",
         overflow: t("islandMore") || "更多",
       };
+      updateFlatLabels();
+      chooseFlatLayout();
       measureWidths();
       fileButton.textContent = labels.file;
       viewButton.textContent = labels.view;
@@ -819,13 +925,14 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
     applyLocale();
     island.setAttribute("data-mode", "full");
     requestAnimationFrame(function () {
+      chooseFlatLayout();
       measure();
       measureWidths();
       refreshBounds();
       watchComposerTheme();
       post({ type: "dsh-portable/window-state" });
     });
-    function onResize() { measure(); measureWidths(); refreshBounds(); }
+    function onResize() { chooseFlatLayout(); measure(); measureWidths(); refreshBounds(); }
     window.addEventListener("resize", onResize);
     if (window.visualViewport) window.visualViewport.addEventListener("resize", onResize);
     busyTimer = setInterval(refreshBusy, BUSY_POLL_MS);

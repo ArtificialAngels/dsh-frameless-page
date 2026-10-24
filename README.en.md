@@ -14,6 +14,7 @@ shell's native implementation.
 - Click (press → release, <3px): expand; click background again to collapse.
 - Drag: hold anywhere that is not a button and move >3px to drag the window.
 - Expanded row: File / View / Help / Minimize / Maximize / Close
+- **Width-adaptive row**: with enough space, every File/View/Help command is flattened directly into the row; when space runs out the groups are folded back into their top-level buttons one by one (Help -> View -> File), then the ••• / compact tiers take over.
   (menu commands are executed by the shell).
 - Fullscreen: pill stays visible; click it or press Esc to leave fullscreen.
 - Top 5% of the page: press-drag to move the window, double-click to maximize/restore.

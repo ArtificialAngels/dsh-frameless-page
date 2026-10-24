@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.1.31
+- Flatten the menu: with enough width the expanded row shows every File/View/Help command inline; when space is tight the groups fold back into their top-level buttons one by one (Help -> View -> File), then the existing ••• / compact tiers apply.
 ## 0.1.30
 - Drop the optional patched shell bundle. The plugin targets the new UI only and runs on the stock DSH-Portable 0.9.5+ shell (which already provides the window-chrome bridge); no upstream exe is modified.
 ## 0.1.29
@@ -23,6 +25,7 @@
 - Fullscreen keeps the pill visible and clickable to exit.
 - New/old UI switch with persistence; iOS-style traffic lights in the native bar.
 - Removed the legacy "gravity page" floating overlay.
+
 
 
 
