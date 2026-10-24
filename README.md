@@ -30,6 +30,19 @@
 - 官方原版 `DeepSeek-Herness.exe` **没有**这个能力：插件会被跳过（不会报错，但也没有胶囊）。
 - 配套外壳改动（无边框、胶囊模式、窗口命令、四边缩放等）见 DSH-Portable PR：<https://github.com/WSL043/DSH-Portable/pull/181>；集成说明见 `docs/immersive-island.md`。
 
+## 可选：配套外壳（本机美化）
+
+上游 0.9.5 起外壳已内置 window-chrome 桥，**胶囊插件在官方外壳上即可工作**。
+
+如果你还想要上游没合并的那些外壳美化（6px 窗口缩放边缘、去掉 DWM 白色边线、iOS 交通灯），`native/` 目录附带了一份基于上游 v0.9.5 编译的 `DeepSeek-Herness.exe`：
+
+```powershell
+# 先退出 DSH-Portable，再运行：
+powershell -ExecutionPolicy Bypass -File .\native\install-pill-shell.ps1
+```
+
+脚本会先把原 exe 备份为 `DeepSeek-Herness.exe.stock-backup`。每次产品更新会覆盖 exe，更新后重跑一次即可。
+
 ## 安装（标准 DSH 插件方法）
 
 `dsh plugin` 会把参数原样转发给 profile 目录里的 pnpm，所以支持 pnpm 的全部安装语法。安装后**重启 DSH** 生效（插件在 DSH 启动时加载）。
