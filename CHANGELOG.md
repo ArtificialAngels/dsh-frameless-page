@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.38
+- Adapt to DSH 0.2.1-rc.3: relax `engines.dsh` from the exact `0.2.1-rc.2` to `^0.2.1-rc.2`, so the bundle loads on both rc.2 and rc.3 (and later 0.2.x releases) instead of being skipped by app-boot as incompatible.
+
 ## 0.1.37
 - Remove the transparent overlay strips used for window resizing (they could intermittently render as an opaque 3px band over the wallpaper). Edge/corner resizing is now hit-tested from document pointer coordinates, with cursor hints set via JS; nothing is drawn over the page.
 ## 0.1.36

@@ -19,8 +19,6 @@
       islandMaximize: "最大化或还原",
       islandRestore: "还原窗口",
       islandClose: "关闭窗口",
-      islandToggleOld: "切换至老UI",
-      islandToggleNew: "切换至新UI",
     },
     en: {
       islandFile: "File",
@@ -31,8 +29,6 @@
       islandMaximize: "Maximize or restore",
       islandRestore: "Restore window",
       islandClose: "Close window",
-      islandToggleOld: "Switch to old UI",
-      islandToggleNew: "Switch to new UI",
     },
   };
 
