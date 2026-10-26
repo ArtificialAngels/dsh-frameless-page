@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.1.39
+- DSH-Portable 0.9.7 added the `windowResize` capability and the `resizeEdges` flag on `dsh-portable/window-chrome`. Opt in when available: the shell then removes its 4px inset and DWM border and routes page edge drags through `dsh-portable/window-resize`; older shells ignore the field.
 ## 0.1.38
 - Adapt to DSH 0.2.1-rc.3: relax `engines.dsh` from the exact `0.2.1-rc.2` to `^0.2.1-rc.2`, so the bundle loads on both rc.2 and rc.3 (and later 0.2.x releases) instead of being skipped by app-boot as incompatible.
 
@@ -73,6 +75,7 @@
 
 ## 0.1.14
 - Reverted the ellipse, zero side padding, no reserved space, click (on release) expands.
+
 
 
 

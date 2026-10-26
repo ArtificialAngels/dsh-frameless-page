@@ -182,6 +182,7 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
     var t = typeof opts.t === "function" ? opts.t : function (key) { return key; };
     var host = nativeHost();
     if (!host || !document.body) return null;
+    var pageResizeEdges = host.capabilities.windowResize === true;
     injectStyles();
 
     var island = document.createElement("div");
@@ -990,9 +991,10 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
 
     refreshBusy();
 
-    // Tell the shell the page owns the chrome so the native strip stays out of
-    // the layout and native drag / window-control / menu messages are accepted.
-    post({ type: "dsh-portable/window-chrome", frameless: true });
+    // Tell the shell the page owns the chrome and ask it to hand over the window
+    // edge resize zones (0.9.7+: resizeEdges removes the 4px inset and DWM border);
+    // older shells ignore the extra field and keep their native resize band.
+    post({ type: "dsh-portable/window-chrome", frameless: true, resizeEdges: pageResizeEdges });
 
     return {
       element: island,
@@ -1006,7 +1008,7 @@ html.dfp-window-fullscreen #root{padding-top:0 !important}@media (prefers-reduce
         clearTimeout(menuLeaveTimer);
         clearTimeout(themeResampleTimer);
         if (themeObserver) { try { themeObserver.disconnect(); } catch (error) { /* ignore */ } themeObserver = null; }
-        post({ type: "dsh-portable/window-chrome", frameless: false });
+        post({ type: "dsh-portable/window-chrome", frameless: false, resizeEdges: false });
         document.documentElement.classList.remove("dfp-island-host", "dfp-window-maximized", "dfp-window-fullscreen");
         document.documentElement.style.removeProperty("--dfp-reserve");
         try { host.removeEventListener("message", onMessage); } catch (error) { /* no channel */ }
